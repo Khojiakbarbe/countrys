@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Triangle } from "react-loader-spinner";
 
+import { useNavigate } from 'react-router-dom'
 
 
 export default function Home() {
+
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
 
@@ -21,14 +24,18 @@ export default function Home() {
             .catch(err => console.warn(err))
     }, [])
 
+
+
     const filtered = []
 
     if (filter.length) {
-        const filtering = data.filter(regione => regione.region.toLowerCase().includes(filter.toLowerCase()) || regione.name.common.toLowerCase().includes(filter.toLowerCase()) )
+        const filtering = data.filter(regione => regione.region.toLowerCase().includes(filter.toLowerCase()) || regione.name.common.toLowerCase().includes(filter.toLowerCase()))
         filtered.push(filtering)
     } else {
         filtered.push(data)
     }
+
+
 
     return (
         <div className="container pt-5 pb-5">
@@ -53,7 +60,7 @@ export default function Home() {
                                 <input type="text" className="form-control" placeholder="Search for a country…" onChange={e => setFilter(e.target.value)} />
                             </div>
                             <div className="col text-end">
-                                <select style={{ border: 'none' }} onChange={e => setFilter(e.target.value)}>
+                                <select style={{ border: 'none', backgroundColor:'unset' }} onChange={e => setFilter(e.target.value)}>
                                     <option value="">Filter by Region</option>
                                     <option value="africa">Africa</option>
                                     <option value="america">America</option>
@@ -67,8 +74,8 @@ export default function Home() {
                         <div className="row mt-5">
                             {filtered[0].map((post, ind) => {
                                 return (
-                                    <div key={ind} className="col-md-3 p-2">
-                                        <div className="card" >
+                                    <div key={ind} className="col-md-3 p-2" style={{cursor:'pointer'}} onClick={() => navigate('/id', { state: { message: post.name.common } })}>
+                                        <div className="border" style={{ borderRadius: '5px', overflow: 'hidden' }}>
                                             <img src={post.flags.png} style={{ width: '100%', height: '200px', overflow: 'hidden' }} alt="" />
                                             <div className="p-1">
                                                 <h5>{post.name.common}</h5>
